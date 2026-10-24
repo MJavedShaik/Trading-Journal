@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>NAS100 Daily P/L Calendar</title>
+<style>
+:root{color-scheme:dark;--bg:#050505;--panel:#111111;--line:#303030;--muted:#b0b0b0;--text:#f5f5f5;--blue:#e8e8e8;--green:#f5f5f5;--red:#8f8f8f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1300px;margin:auto;padding:20px 14px 50px}h1{margin:0;font-size:27px}h2{font-size:18px;margin:0 0 13px}.muted{color:var(--muted)}header{margin-bottom:18px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:22px;margin-top:4px}.layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(270px,1fr);gap:14px}.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}.calhead strong{font-size:20px}.controls{display:flex;gap:6px;align-items:center}.btn,button{border:1px solid #435166;background:#1a1a1a;color:#f5f5f5;border-radius:8px;padding:9px 12px;cursor:pointer;font:inherit}.btn.primary,button.primary{background:#f2f2f2;border-color:#f2f2f2;color:#080808}select,input{background:#080808;border:1px solid #444;color:white;border-radius:7px;padding:9px;font:inherit;max-width:100%}.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.weekdays div{text-align:center;background:#1b1b1b;border:1px solid var(--line);padding:8px 2px;font-size:12px;color:#d8e3ef}.day{min-height:110px;border:1px solid var(--line);padding:6px;background:#0b0b0b;cursor:pointer;min-width:0}.day.outside{opacity:.42}.day.selected{outline:2px solid #f2f2f2;outline-offset:-2px}.day.profit{background:#102517;border-color:#28633a}.day.loss{background:#2a1111;border-color:#713030}.daynum{font-size:12px;color:#d6dfeb}.daypnl{margin-top:7px;font-size:13px;font-weight:700;overflow-wrap:anywhere}.positive{color:#55d879}.negative{color:#ff6b6b}.zero{color:#bdbdbd}.count{color:var(--muted);font-size:11px}.tradecard{border:1px solid var(--line);border-radius:9px;padding:11px;margin-top:9px;background:#0c1117}.tradecard strong{display:block;margin-bottom:5px}.tradecard .row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.gridform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.field input,.field select{width:100%}.wide{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:920px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{font-size:11px;color:var(--muted);text-transform:uppercase}td button{padding:5px 8px;font-size:12px}.history{margin-top:14px}.notice{font-size:12px;color:var(--muted);margin:10px 0 0}@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.day{min-height:90px;padding:4px}.daypnl{font-size:11px}.weekdays div{font-size:10px}main{padding:14px 8px}}
+@media(max-width:480px){body{font-size:14px}main{padding:calc(12px + env(safe-area-inset-top)) 8px calc(28px + env(safe-area-inset-bottom))}header{margin:0 4px 14px}h1{font-size:23px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}.stat,.panel{padding:11px;border-radius:10px}.stat span{font-size:11px;line-height:1.35}.stat strong{font-size:19px;overflow-wrap:anywhere}.layout{grid-template-columns:minmax(0,1fr);gap:10px}.calhead{align-items:flex-start;gap:10px}.calhead strong{font-size:18px}.controls{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.controls button{min-height:42px;padding:8px}.controls input{grid-column:1/-1;width:100%;min-height:42px;font-size:16px}.weekdays div{padding:7px 0;font-size:10px}.day{min-height:86px;padding:4px 3px}.daynum{font-size:11px}.daypnl{font-size:10px;margin-top:5px;line-height:1.25}.count{font-size:9px;line-height:1.2}.gridform{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.field label{font-size:11px}.field input,.field select,select,input{font-size:16px;min-height:42px;padding:8px}.actions button{min-height:42px}.history{margin-top:10px}.tablewrap{margin:0 -2px}.tablewrap table{min-width:900px}.notice{font-size:11px;line-height:1.4}}@media(max-width:350px){.stats{grid-template-columns:minmax(0,1fr)}.day{min-height:80px}.daypnl{font-size:9px}.count{font-size:8px}}
+/* Keep native input sizing inside the available form width. */
+.layout > *, .field, .controls{min-width:0}
+.gridform{grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:16px 14px}
+.field label{font-size:12px;line-height:1.5;margin-bottom:7px;color:#c5c5c5}
+.field input,.field select{display:block;min-width:0;width:100%;max-width:100%;min-height:46px;padding:11px 12px;line-height:1.4;background:#0b0b0b;border:1px solid #484848;border-radius:9px;transition:border-color .15s,box-shadow .15s}
+.field input::placeholder{color:#858585;opacity:1}
+.field input:hover,.field select:hover{border-color:#707070}
+.field input:focus-visible,.field select:focus-visible,.controls input:focus-visible{outline:2px solid #e8e8e8;outline-offset:2px;border-color:#e8e8e8}
+.field input[type="date"]{appearance:none;-webkit-appearance:none}
+.field input[type="date"]::-webkit-date-and-time-value{text-align:left;min-width:0}
+/* Separate the date, navigation, and native month picker at every width. */
+.calhead{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:start}
+.calhead strong{min-width:0;overflow-wrap:anywhere;line-height:1.4}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;min-width:0}
+.controls button{min-width:0;min-height:44px;padding:10px 12px;white-space:nowrap}
+.controls input[type="month"]{display:block;grid-column:1/-1;min-width:0;width:100%;max-width:100%;min-height:46px;padding:10px 12px;font-size:16px;line-height:1.4;appearance:none;-webkit-appearance:none}
+.controls input[type="month"]::-webkit-date-and-time-value{min-width:0;text-align:left}
+#calcPreview{margin-top:0;overflow-wrap:anywhere;line-height:1.6}
+aside.panel > .actions{margin-top:18px}
+aside.panel > .actions button{min-height:44px}
+@media(max-width:480px){.field input,.field select{font-size:16px}.gridform{gap:16px 12px}}
+</style></head><body><main>
+<header><h1>NAS100 Trading Journal</h1><div class="muted">Daily P/L calendar · Select a day to view or add trades</div></header>
+<section class="stats">
+<div class="stat"><span>Monthly Total Realised</span><strong id="totalPnl">R0.00</strong></div>
+<div class="stat"><span>Total Trades</span><strong id="totalTrades">0</strong></div>
+<div class="stat"><span>Wins / Losses / Breakeven</span><strong id="outcomes">0 / 0 / 0</strong></div>
+<div class="stat"><span>Monthly Win Rate</span><strong id="monthlyWinRate">0.0%</strong><div class="muted" id="monthlyWinDetail" style="font-size:12px;margin-top:4px">0 wins / 0 losses</div></div>
+</section>
+<div class="layout">
+<section class="panel">
+<div class="calhead"><strong id="monthLabel">Daily calendar</strong><div class="controls"><button id="prev">‹</button><button id="next">›</button><button id="today" class="primary">Today</button><input id="monthPicker" type="month" value="2026-10" aria-label="Choose month"></div></div>
+<div class="weekdays"><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div></div><div class="days" id="calendar"></div>
+<p class="notice">Green = positive P/L; red = negative; grey = breakeven. Dates can be assigned or changed in each trade.</p>
+</section>
+<aside class="panel">
+<h2 id="selectedTitle">No date selected</h2><div class="muted" id="selectedHint">Select a date to add a trade.</div>
+<div class="stat" style="margin-top:12px"><span>Daily realised P/L</span><strong id="dayPnl">R0.00</strong></div>
+<div id="dayTrades"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:15px 0">
+<div id="tradeForm">
+<h2 id="formTitle">Add trade</h2>
+<div class="gridform">
+<div class="field wide"><label for="tradeDate">Trade date</label><input id="tradeDate" type="date"></div>
+<div class="field"><label for="direction">Direction</label><select id="direction"><option>Long</option><option>Short</option></select></div>
+<div class="field"><label for="entry">Entry</label><input id="entry" type="number" step="any" placeholder="Entry"></div>
+<div class="field"><label for="sl">Stop-loss</label><input id="sl" type="number" step="any" placeholder="Stop-loss"></div>
+<div class="field"><label for="tp">Take-profit</label><input id="tp" type="number" step="any" placeholder="Take-profit"></div>
+<div class="field"><label for="pnl">Realised P/L (R)</label><input id="pnl" type="number" step="any" placeholder="Profit or loss"></div>
+<div class="field"><label for="outcome">Outcome</label><select id="outcome"><option>Win</option><option>Loss</option><option selected>Breakeven</option><option>Open</option></select></div>
+<div class="field wide"><label for="notes">Notes</label><input id="notes" placeholder="Optional setup notes"></div>
+<div class="field wide"><div class="tradecard" id="calcPreview">Enter Entry, SL and TP to calculate reward-to-risk.</div></div>
+</div>
+<div class="actions"><button class="primary" id="save">Add trade</button><button id="cancel" hidden>Cancel edit</button></div>
+<p class="notice">P/L is kept separate from amount received. Existing trades without a confirmed realised P/L show as “Not entered”; breakeven trades are set to R0.00.</p>
+</div>
+</aside></div>
+<section class="panel history"><h2>All Trades</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>Date</th><th>Direction</th><th>Entry</th><th>Stop-loss</th><th>Take-profit</th><th>Risk:Reward</th><th>Realised P/L</th><th>Outcome</th><th>Actions</th></tr></thead><tbody id="history"></tbody></table></div>
+<div class="actions"><button id="export">Export CSV backup</button><button id="import">Import CSV backup</button><button id="restore">Reset journal</button><input id="importFile" type="file" accept=".csv,text/csv" hidden></div></section>
+</main>
+<script>
+const base=[];
+let trades=[];try{const saved=localStorage.getItem("nas100PnlCalendarV1");if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed))trades=parsed}}catch(e){}
+let chosen=new Date().toISOString().slice(0,10),editing=null;const $=id=>document.getElementById(id);
+const cash=n=>"R"+Number(n||0).toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2});
+const px=n=>n==null||n===""?"—":Number(n).toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2});
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rratio=t=>calcRR(t.entry,t.sl,t.tp);
+function calcRR(entry,sl,tp){const risk=Math.abs(Number(entry)-Number(sl)),reward=Math.abs(Number(tp)-Number(entry));return risk>0?reward/risk:null}
+function updateCalc(){
+ const e=$("entry").value,sl=$("sl").value,tp=$("tp").value;
+ const valid=e!==""&&sl!==""&&tp!==""&&Number(e)!==Number(sl);
+ if(!valid){$("calcPreview").textContent="Enter Entry, SL and TP (with SL different from Entry) to calculate reward-to-risk.";return}
+ const ratio=calcRR(e,sl,tp);
+ $("calcPreview").innerHTML=`<strong>Risk-to-reward ratio: ${ratio===null?"—":ratio.toFixed(2)+":1"}</strong><div class="muted">Price risk: ${Math.abs(Number(e)-Number(sl)).toFixed(2)} points · Price reward: ${Math.abs(Number(tp)-Number(e)).toFixed(2)} points</div><div class="muted">Calculated from Entry, Stop-Loss and Take-Profit.</div>`;
+}
+function saveData(){try{localStorage.setItem("nas100PnlCalendarV1",JSON.stringify(trades))}catch(e){}}
+function month(){return $("monthPicker").value||chosen.slice(0,7)}
+function pnlFor(date){const a=trades.filter(t=>t.date===date&&t.pnl!==null&&t.pnl!=="");return a.reduce((s,t)=>s+Number(t.pnl||0),0)}
+function renderCalendar(){
+ const [y,m]=month().split("-").map(Number);$("monthLabel").textContent=new Date(y,m-1,1).toLocaleDateString("en",{month:"long",year:"numeric"});
+ const first=new Date(y,m-1,1),offset=(first.getDay()+6)%7,start=new Date(y,m-1,1-offset);let html="";
+ for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const iso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`,arr=trades.filter(t=>t.date===iso),has=arr.some(t=>t.pnl!==null&&t.pnl!==""),val=pnlFor(iso),cls=has?(val>0?"positive":val<0?"negative":"zero"):"",dayResult=has?(val>0?"profit":val<0?"loss":""):"";html+=`<div class="day ${d.getMonth()!==m-1?"outside":""} ${iso===chosen?"selected":""} ${dayResult}" data-date="${iso}"><div class="daynum">${d.getDate()}</div>${arr.length?`<div class="daypnl ${cls}">${has?cash(val):"P/L —"}</div><div class="count">${arr.length} trade${arr.length===1?"":"s"}</div>`:""}</div>`}
+ $("calendar").innerHTML=html;$("calendar").querySelectorAll("[data-date]").forEach(el=>el.addEventListener("click",()=>{chosen=el.dataset.date;$("tradeDate").value=chosen;render()}))
+}
+function render(){
+ const monthTrades=trades.filter(t=>t.date&&t.date.slice(0,7)===month());
+ const wins=monthTrades.filter(t=>t.outcome==="Win").length,loss=monthTrades.filter(t=>t.outcome==="Loss").length,be=monthTrades.filter(t=>t.outcome==="Breakeven").length;
+ const monthPnl=monthTrades.filter(t=>t.pnl!==null&&t.pnl!=="").reduce((s,t)=>s+Number(t.pnl||0),0);
+ const decided=wins+loss;
+ $("monthlyWinRate").textContent=(decided?wins/decided*100:0).toFixed(1)+"%";
+ $("monthlyWinDetail").textContent=`${wins} wins / ${loss} losses · breakeven excluded`;
+ $("totalPnl").textContent=cash(monthPnl);$("totalPnl").className=monthPnl>=0?"positive":"negative";$("totalTrades").textContent=monthTrades.length;$("outcomes").textContent=`${wins} / ${loss} / ${be}`;
+ renderCalendar();$("selectedTitle").textContent=chosen?new Date(chosen+"T12:00:00").toLocaleDateString("en",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):"Selected day";
+ const day=trades.filter(t=>t.date===chosen),dayHas=day.some(t=>t.pnl!==null&&t.pnl!=="");$("dayPnl").textContent=dayHas?cash(pnlFor(chosen)):"Not entered";$("dayPnl").className=dayHas?(pnlFor(chosen)>=0?"positive":"negative"):"";$("selectedHint").textContent=`${day.length} trade${day.length===1?"":"s"} on this day`;
+ $("dayTrades").innerHTML=day.length?day.map(t=>`<div class="tradecard"><div class="row"><strong>#${String(t.no).padStart(3,"0")} · ${safe(t.direction)}</strong><span>${safe(t.outcome)}</span></div><div class="row muted"><span>Entry ${px(t.entry)}</span><span>SL ${px(t.sl)}</span><span>TP ${px(t.tp)}</span></div><div class="row"><span>Risk ${t.risk==null?"—":cash(t.risk)}</span><strong class="${t.pnl==null?"":Number(t.pnl)>=0?"positive":"negative"}">${t.pnl==null||t.pnl===""?"P/L not entered":cash(t.pnl)}</strong></div><div class="actions"><button data-edit="${t.no}">Edit</button></div></div>`).join(""):`<p class="muted">No trades recorded on this date. Use the form below to add one.</p>`;
+ $("dayTrades").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>edit(+b.dataset.edit)));
+ $("history").innerHTML=trades.slice().sort((a,b)=>a.no-b.no).map(t=>`<tr><td>#${String(t.no).padStart(3,"0")}</td><td>${t.date||"Not assigned"}</td><td>${safe(t.direction)}</td><td>${px(t.entry)}</td><td>${px(t.sl)}</td><td>${px(t.tp)}</td><td>${calcRR(t.entry,t.sl,t.tp)===null?"—":calcRR(t.entry,t.sl,t.tp).toFixed(2)+":1"}</td><td>${t.pnl==null||t.pnl===""?"Not entered":cash(t.pnl)}</td><td>${safe(t.outcome)}</td><td><button data-edit="${t.no}">Edit</button> <button data-del="${t.no}">Delete</button></td></tr>`).join("");
+ $("history").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>edit(+b.dataset.edit)));$("history").querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{if(confirm("Delete trade #"+b.dataset.del+"?")){trades=trades.filter(t=>t.no!==+b.dataset.del);saveData();render()}}));
+}
+function edit(no){const t=trades.find(x=>+x.no===no);if(!t)return;editing=no;$("formTitle").textContent="Edit trade #"+no;$("save").textContent="Save changes";$("cancel").hidden=false;for(const [id,key] of [["tradeDate","date"],["direction","direction"],["entry","entry"],["sl","sl"],["tp","tp"],["pnl","pnl"],["outcome","outcome"],["notes","notes"]])$(id).value=t[key]??"";chosen=t.date||chosen;renderCalendar();updateCalc();const form=$("tradeForm").getBoundingClientRect();const offset=Math.max(16,(window.innerHeight-form.height)/2);window.scrollTo({top:Math.max(0,window.scrollY+form.top-offset),behavior:"smooth"})}
+function resetForm(){editing=null;$("formTitle").textContent="Add trade";$("save").textContent="Add trade";$("cancel").hidden=true;["entry","sl","tp","pnl","notes"].forEach(id=>$(id).value="");$("tradeDate").value=chosen;$("direction").value="Short";$("outcome").value="Breakeven";updateCalc()}
+$("save").addEventListener("click",()=>{const isNewTrade=editing===null;const date=$("tradeDate").value;if(!$("entry").value||!$("sl").value||!$("tp").value){alert("Please enter entry, stop-loss and take-profit.");return}const t={date,direction:$("direction").value,entry:Number($("entry").value),sl:Number($("sl").value),tp:Number($("tp").value),risk:null,amount:0,pnl:$("pnl").value===""?null:Number($("pnl").value),outcome:$("outcome").value,notes:$("notes").value};if(editing!==null){const idx=trades.findIndex(x=>+x.no===editing);trades[idx]={...trades[idx],...t}}else{t.no=Math.max(0,...trades.map(x=>+x.no||0))+1;trades.push(t)}chosen=date||chosen;$("monthPicker").value=chosen.slice(0,7);saveData();resetForm();render();if(isNewTrade)window.scrollTo({top:0,behavior:"smooth"})});
+$("cancel").addEventListener("click",()=>{resetForm();render()});
+$("prev").addEventListener("click",()=>shift(-1));$("next").addEventListener("click",()=>shift(1));function shift(n){const [y,m]=month().split("-").map(Number),d=new Date(y,m-1+n,1);$("monthPicker").value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;render()}
+$("today").addEventListener("click",()=>{const d=new Date();chosen=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;$("monthPicker").value=chosen.slice(0,7);$("tradeDate").value=chosen;render()});
+$("monthPicker").addEventListener("change",render);
+$("export").addEventListener("click",()=>{const cols=["no","date","direction","entry","sl","tp","risk","amount","pnl","outcome","notes"],csv=[cols.join(","),...trades.map(t=>cols.map(k=>`"${String(t[k]??"").replaceAll('"','""')}"`).join(","))].join("\r\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="nas100_daily_pnl.csv";a.click();URL.revokeObjectURL(a.href)});
+function parseCSV(text){const rows=[];let row=[],field="",quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++}else if(c==='"')quoted=false;else field+=c}else if(c==='"')quoted=true;else if(c===","){row.push(field);field=""}else if(c==="\n"){row.push(field.replace(/\r$/, ""));rows.push(row);row=[];field=""}else field+=c}if(field!==""||row.length){row.push(field.replace(/\r$/, ""));rows.push(row)}return rows}
+$("import").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const rows=parseCSV((await file.text()).replace(/^\uFEFF/,""));if(rows.length<2)throw new Error("The CSV has no trade rows.");const headers=rows[0].map(x=>x.trim().toLowerCase()),index=key=>headers.indexOf(key);if(index("entry")<0||index("sl")<0||index("tp")<0||index("outcome")<0)throw new Error("This file does not look like a trading journal CSV backup.");const value=(cells,key)=>{const i=index(key);return i<0?"":(cells[i]??"")};const number=(cells,key)=>{const raw=value(cells,key).trim();if(raw==="")return null;const n=Number(raw);if(!Number.isFinite(n))throw new Error(`Invalid ${key} value in the CSV.`);return n};const imported=rows.slice(1).filter(cells=>cells.some(x=>x.trim()!=="")).map((cells,i)=>({no:number(cells,"no")??i+1,date:value(cells,"date").trim(),direction:value(cells,"direction").trim()||"Short",entry:number(cells,"entry"),sl:number(cells,"sl"),tp:number(cells,"tp"),risk:number(cells,"risk"),amount:number(cells,"amount")??0,pnl:number(cells,"pnl"),outcome:value(cells,"outcome").trim()||"Breakeven",notes:value(cells,"notes")}));if(!imported.length)throw new Error("No trades were found in the CSV.");if(!confirm(`Import ${imported.length} trades and replace the current journal? Export a backup first if you want to keep the current trades.`))return;trades=imported;const latest=trades.map(t=>t.date).filter(Boolean).sort().at(-1);if(latest){chosen=latest;$("monthPicker").value=latest.slice(0,7)}saveData();resetForm();render();alert(`Imported ${trades.length} trades.`)}catch(err){alert("Could not import CSV: "+err.message)}finally{e.target.value=""}});
+$("restore").addEventListener("click",()=>{if(confirm("Reset the journal? This permanently clears all saved trades in this browser. Export a CSV backup first if you want to keep them.")){trades=[];saveData();chosen=new Date().toISOString().slice(0,10);$("monthPicker").value=chosen.slice(0,7);resetForm();render()}});
+["entry","sl","tp","pnl","outcome"].forEach(id=>$(id).addEventListener("input",updateCalc));$("outcome").addEventListener("change",updateCalc);
+$("tradeDate").value=chosen;$("monthPicker").value=chosen.slice(0,7);resetForm();render();updateCalc();
+</script></body></html>
